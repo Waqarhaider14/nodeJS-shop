@@ -90,7 +90,11 @@ const getProducts = asynchandlers(async (req, res)=>{
     res.status(200).json(products)
 
 })
+// testing 
 
+const test = asynchandlers(async(req, res)=>{
+  res.json({message:"All setup!"})
+})
 // Add new Products
 /**
  * @swagger
@@ -426,4 +430,5 @@ export {getProducts,
 newProducts,
 updateproduct,
 deleteproduct,
+test
 }

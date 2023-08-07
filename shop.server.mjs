@@ -9,7 +9,7 @@ import errorMiddleWare from './middleware/errorHandling.middleware.mjs'
 import authMiddleware from './middleware/authMiddleware.middleware.mjs'
 import upload from './middleware/upload.middleware.mjs';
 // Importing product controller
-import {getProducts,newProducts, updateproduct, deleteproduct } from './controllers/product.controller.mjs'
+import {getProducts,newProducts, updateproduct, deleteproduct, test } from './controllers/product.controller.mjs'
 // Importing Filters
 import {searching, filterByCategory, filterbyPrice, filterbysize, filterByRating, indexSearch} from './controllers/product.filters.mjs'
 // Importing Users controller
@@ -30,6 +30,7 @@ app.use(express.json())
 app.use('/api-doc',swaggerUi.serve, swaggerUi.setup(swaggerspecs))
 
 // Products
+router.get('/',test)
 router.get("/products",getProducts)
 router.post("/products",upload,authMiddleware,newProducts)
 router.put("/products",upload,authMiddleware,updateproduct)
@@ -63,10 +64,6 @@ router.post('/reset',resetPassword)
 // Account page
 router.get('/Account',authMiddleware,userAccount)
 // Router
-//app.use(router)
-app.use('/',(req, res)=>{
-    res.send("Welcome to Ecommerce API's")
-})
 app.use(router)
 app.use(errorMiddleWare)
 app.listen(PORT, () =>{
