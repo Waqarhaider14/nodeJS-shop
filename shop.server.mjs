@@ -64,7 +64,7 @@ router.post('/reset',resetPassword)
 router.get('/Account',authMiddleware,userAccount)
 // Router
 //app.use(router)
-app.get('/',(req, res)=>{
+app.use('/',(req, res)=>{
     res.send("Welcome to Ecommerce API's")
 })
 app.use(router)
