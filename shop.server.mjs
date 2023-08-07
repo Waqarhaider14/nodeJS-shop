@@ -64,6 +64,9 @@ router.post('/reset',resetPassword)
 router.get('/Account',authMiddleware,userAccount)
 // Router
 app.use(router)
+app.get('/',(req, res)=>{
+    res.send("Welcome to Ecommerce API's")
+})
 
 app.use(errorMiddleWare)
 app.listen(PORT, () =>{
