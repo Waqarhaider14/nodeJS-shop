@@ -63,11 +63,11 @@ router.post('/reset',resetPassword)
 // Account page
 router.get('/Account',authMiddleware,userAccount)
 // Router
-app.use(router)
+//app.use(router)
 app.get('/',(req, res)=>{
     res.send("Welcome to Ecommerce API's")
 })
-
+app.use(router)
 app.use(errorMiddleWare)
 app.listen(PORT, () =>{
     console.log(`App is listening to ${PORT}`)
