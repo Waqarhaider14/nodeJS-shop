@@ -6,6 +6,8 @@ import dotenv from "dotenv";
 import main from '../nodeMailer/nodemailer.mjs'
 import { v4 as uuidv4 } from 'uuid';
 
+const ACCESS_TOKEN_SECRET = 'systems123@'
+
 
 dotenv.config()
 
@@ -184,7 +186,7 @@ const loginUser = asynchandlers(async(req, res)=>{
               role: user.role
             },
           },
-          process.env.ACCESS_TOKEN_SECRET,
+          ACCESS_TOKEN_SECRET,
           { expiresIn: '1h' } // Changed token expiration to 1 hour for better usability
         );
     

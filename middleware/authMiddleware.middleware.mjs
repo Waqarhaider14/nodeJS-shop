@@ -1,6 +1,6 @@
 // authMiddleware.js
 import jwt from 'jsonwebtoken'
-
+const ACCESS_TOKEN_SECRET = 'systems123@'
 const authMiddleware = (req, res, next) => {
   const token = req.headers.authorization; // Assuming the token is passed in the Authorization header
 
@@ -9,7 +9,7 @@ const authMiddleware = (req, res, next) => {
   }
 
   try {
-    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const decodedToken = jwt.verify(token, ACCESS_TOKEN_SECRET);
     console.log('Decoded Token is:', decodedToken);
     req.user = {
       userId: decodedToken.user.id,
