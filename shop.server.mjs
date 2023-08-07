@@ -1,7 +1,7 @@
 import express from 'express'
 import {connectDB} from './config/db-connection.mjs'
-import env from 'dotenv'
-env.config()
+import {config} from 'dotenv'
+config()
 const app = express();
 const PORT = process.env.PORT || 4001;
 // Middlwares
