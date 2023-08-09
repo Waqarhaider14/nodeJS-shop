@@ -1,15 +1,34 @@
 {
     "version": 2,
     "builds": [
-        {
-            "src": "./shop.server.mjs",
-            "use": "@vercel/node"
-        }
+      {
+        "src": "shop.server.mjs",
+        "use": "@vercel/node@1.12.0"
+      }
     ],
     "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "/"
-        }
-    ]
-}
+      { "src": "/api-doc", "dest": "/api-doc" },
+      { "src": "/products", "dest": "shop.server.mjs" },
+      { "src": "/searching", "dest": "shop.server.mjs" },
+      { "src": "/index/search", "dest": "shop.server.mjs" },
+      { "src": "/products/category", "dest": "shop.server.mjs" },
+      { "src": "/products/price", "dest": "shop.server.mjs" },
+      { "src": "/products/size", "dest": "shop.server.mjs" },
+      { "src": "/products/rating", "dest": "shop.server.mjs" },
+      { "src": "/users", "dest": "shop.server.mjs" },
+      { "src": "/cart/add", "dest": "shop.server.mjs" },
+      { "src": "/remove", "dest": "shop.server.mjs" },
+      { "src": "/cart", "dest": "shop.server.mjs" },
+      { "src": "/checkout", "dest": "shop.server.mjs" },
+      { "src": "/rating", "dest": "shop.server.mjs" },
+      { "src": "/register", "dest": "shop.server.mjs" },
+      { "src": "/login", "dest": "shop.server.mjs" },
+      { "src": "/verify", "dest": "shop.server.mjs" },
+      { "src": "/forgetPassword", "dest": "shop.server.mjs" },
+      { "src": "/reset", "dest": "shop.server.mjs" },
+      { "src": "/Account", "dest": "shop.server.mjs" }
+    ],
+    "env": {
+      "NODE_ENV": "production"
+    }
+  }
