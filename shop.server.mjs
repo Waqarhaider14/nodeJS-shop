@@ -1,7 +1,7 @@
 import express from 'express'
 import {connectDB} from './config/db-connection.mjs'
-import {config} from 'dotenv'
-config()
+import env from 'dotenv'
+env.config()
 const app = express();
 const PORT = process.env.PORT || 4001;
 // Middlwares
@@ -9,7 +9,7 @@ import errorMiddleWare from './middleware/errorHandling.middleware.mjs'
 import authMiddleware from './middleware/authMiddleware.middleware.mjs'
 import upload from './middleware/upload.middleware.mjs';
 // Importing product controller
-import {getProducts,newProducts, updateproduct, deleteproduct, test } from './controllers/product.controller.mjs'
+import {getProducts,newProducts, updateproduct, deleteproduct } from './controllers/product.controller.mjs'
 // Importing Filters
 import {searching, filterByCategory, filterbyPrice, filterbysize, filterByRating, indexSearch} from './controllers/product.filters.mjs'
 // Importing Users controller
@@ -22,7 +22,31 @@ const router = express.Router()
 // Swagger 
 import swaggerspecs from './swagger/swagger.specs.mjs'
 import swaggerUi from 'swagger-ui-express'
+// cluster setup
+import  cluster from 'cluster';
+import os from 'os'
 
+const setupWorkerProcesses = () => {
+    const numCores = os.cpus().length;
+    console.log(`Master cluster setting up ${numCores} workers`);
+  
+    for (let i = 0; i < numCores; i += 1) {
+      cluster.fork();
+    }
+  
+    cluster.on("online", (worker) => {
+      console.log(`Worker ${worker.process.pid} is listening`);
+    });
+  
+    cluster.on("exit", (worker, code, signal) => {
+      console.log(`Worker ${worker.process.pid} died with code: ${code}, and signal: ${signal}`);
+      console.log("Starting a new worker");
+      cluster.fork();
+    });
+  };
+
+  
+const setUpExpress = () => {
 connectDB();
 app.use(express.json())
 
@@ -30,7 +54,6 @@ app.use(express.json())
 app.use('/api-doc',swaggerUi.serve, swaggerUi.setup(swaggerspecs))
 
 // Products
-router.get('/',test)
 router.get("/products",getProducts)
 router.post("/products",upload,authMiddleware,newProducts)
 router.put("/products",upload,authMiddleware,updateproduct)
@@ -65,9 +88,22 @@ router.post('/reset',resetPassword)
 router.get('/Account',authMiddleware,userAccount)
 // Router
 app.use(router)
+
 app.use(errorMiddleWare)
 app.listen(PORT, () =>{
-    console.log(`App is listening to ${PORT}`)
+    console.log(`App is listening to `)
 })
+}
 
+const setupServer = (isClusterRequired) => {
+  if (isClusterRequired && cluster.isPrimary) {
+    setupWorkerProcesses();
+  } else {
+    setUpExpress();
+  }
+};
+
+setupServer(true);
+
+export default app;
 
