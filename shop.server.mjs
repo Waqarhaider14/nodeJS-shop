@@ -31,7 +31,7 @@ const setupWorkerProcesses = () => {
     console.log(`Master cluster setting up ${numCores} workers`);
   
     for (let i = 0; i < numCores; i += 1) {
-      cluster.fork();
+      cluster.fork()
     }
   
     cluster.on("online", (worker) => {
