@@ -55,7 +55,7 @@ app.use('/api-doc',swaggerUi.serve, swaggerUi.setup(swaggerspecs))
 
 // Products
 router.get("/products",getProducts)
-router.post("/products",upload,authMiddleware,newProducts)
+router.post("/products",authMiddleware,newProducts)
 router.put("/products",upload,authMiddleware,updateproduct)
 router.delete("/products",authMiddleware, deleteproduct)
 // filters
@@ -91,7 +91,7 @@ app.use(router)
 
 app.use(errorMiddleWare)
 app.listen(PORT, () =>{
-    console.log(`App is listening to `)
+    console.log(`App is listening to ${PORT} `)
 })
 }
 

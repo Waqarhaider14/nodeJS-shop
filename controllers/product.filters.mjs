@@ -74,8 +74,8 @@ const searching = asynchandlers(async (req, res)=>{
 
 const indexSearch = asynchandlers(async(req, res)=>{
 
-    const productName = req.query.q;
-
+    const productName = req.query.q
+    console.log(productName)
     if(!productName){
         res.status(400).json({message:"No Product Name Provided!"})
     }

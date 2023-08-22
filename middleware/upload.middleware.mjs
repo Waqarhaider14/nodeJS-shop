@@ -14,6 +14,6 @@ const storage = multer.diskStorage({
 });
 
 // Create the multer upload middleware
-const upload = multer({ storage: storage }).single('picture');
+const upload = multer({ storage: storage }).any()
 
 export default upload;

@@ -1,0 +1,46 @@
+var dbName = "Ecommerce-app";
+var collectionName = "products";
+
+// Function to generate random string
+function getRandomString(length) {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  let result = "";
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+function getRandomElement(arr){
+	return arr[Math.floor(Math.random() * arr.length)];
+}
+// Function to generate random integer between min and max (inclusive)
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+// Function to generate random date between start and end date
+function getRandomDate() {
+  const start = new Date("2022-01-01").getTime();
+  const end = new Date("2023-12-31").getTime();
+  return new Date(start + Math.random() * (end - start));
+}
+
+// Connect to the database
+var db = db.getSiblingDB(dbName);
+const genderValue = ['male', 'female', 'kids'];
+const sizeValue = ['small', 'medium', 'large', 'X large'];
+// Insert 100 records
+for (let i = 0; i < 10000; i++) {
+  db[collectionName].insertOne({
+    title: getRandomString(10),
+    description: getRandomString(20),
+    price: getRandomInt(10, 100),
+		category: getRandomString(10),
+		gender: getRandomElement(genderValue),
+		size: getRandomElement(sizeValue),
+    createdAt: getRandomDate(),
+    stock: getRandomInt(0, 100),
+  });
+}
+
+print("Data insertion completed!");

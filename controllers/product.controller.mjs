@@ -200,14 +200,21 @@ const newProducts = async (req, res) => {
         return;
       }
 
-      // Decode the base64 image data and save it as an image file
       const imageData = productData.picture;
-      const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '');
+      const matches = imageData.match(/^data:image\/([A-Za-z-+/]+);base64,(.+)$/);
+  
+      if (!matches || matches.length !== 3) {
+        return res.status(400).json({ message: 'Invalid base64 data.' });
+      }
+  
+      const extension = matches[1]; // Get the extension
+  
+      const base64Data = matches[2];
       const imageBuffer = Buffer.from(base64Data, 'base64');
 
       // Generate a unique filename for the image
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-      const imageFileName = `picture-${uniqueSuffix}.png`; // You can modify the extension if needed
+      const imageFileName = `picture-${uniqueSuffix}.${extension}`; // You can modify the extension if needed
 
       // Save the image to the public folder
       try {
@@ -416,13 +423,33 @@ const deleteproduct = asynchandlers(async (req, res)=>{
     }
 
     const IdArray = ids.split(",")
-    const deletedproduct = await product.deleteMany({_id : {$in : IdArray}})
-    if(deletedproduct.deletedCount != IdArray.length){
-        res.status(404)
-        throw new Error("Some Products not found")
-    }
+    try{
+      // finding the products to be deleted
+      const productToDelete = await product.find({_id:{$in : IdArray}})
 
-    res.status(200).json({message:"Products Deleted"})
+      // Unlink the picture associated with each product
+      productToDelete.forEach(async (productToDelete) => {
+        if(productToDelete.picture){
+          const picturePath = path.join("public", productToDelete.picture)
+          fs.unlink(picturePath, (err) => {
+            if (err){
+              console.error("Error in deleting ");
+            }
+          })
+        }
+      })
+
+      // Delete the products from database
+
+      const deletingProducts = await product.deleteMany({_id:{$in : IdArray}})
+      if(deletingProducts.deletedCount !== IdArray.length){
+        res.status(400).json({message:"Some Products not found"})
+      }
+      res.status(200).json({message:"Product and its picture deleted successfully :)"})
+    }catch(err){
+      console.error("Error: ", err)
+      res.status(500).json({message:"Error in deleting Products"})
+    }
 
 })
 
