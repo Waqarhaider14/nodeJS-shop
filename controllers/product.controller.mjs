@@ -339,12 +339,21 @@ const updateproduct = asynchandlers(async (req, res) =>{
     if (req.body.picture) {
       // Decode the base64 image data and save it as an image file
       const imageData = req.body.picture;
-      const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '');
+      const matches = imageData.match(/^data:image\/([A-Za-z-+/]+);base64,(.+)$/);
+  
+      if (!matches || matches.length !== 3) {
+        return res.status(400).json({ message: 'Invalid base64 data.' });
+      }
+  
+      const extension = matches[1]; // Get the extension
+  
+      const base64Data = matches[2];
       const imageBuffer = Buffer.from(base64Data, 'base64');
 
       // Generate a unique filename for the image
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-      const imageFileName = `picture-${uniqueSuffix}.png`; // You can modify the extension if needed
+      const imageFileName = `picture-${uniqueSuffix}.${extension}`; // You can modify the extension if needed
+
 
       // Save the image to the public folder
       try {
